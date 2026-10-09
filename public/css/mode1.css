@@ -1,0 +1,1178 @@
+    @font-face {
+      font-family: "TikTok Sans";
+      src: url("TikTok_Sans/static/TikTokSans-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "TikTok Sans Medium";
+      src: url("TikTok_Sans/static/TikTokSans-Medium.ttf") format("truetype");
+      font-weight: 500;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "TikTok Sans SemiBold";
+      src: url("TikTok_Sans/static/TikTokSans-SemiBold.ttf") format("truetype");
+      font-weight: 600;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "TikTok Sans Bold";
+      src: url("TikTok_Sans/static/TikTokSans-Bold.ttf") format("truetype");
+      font-weight: 700;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "TikTok Sans Condensed";
+      src: url("TikTok_Sans/static/TikTokSans_Condensed-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    @font-face {
+      font-family: "TikTok Sans Expanded";
+      src: url("TikTok_Sans/static/TikTokSans_Expanded-Regular.ttf") format("truetype");
+      font-weight: 400;
+      font-style: normal;
+      font-display: swap;
+    }
+    :root {
+      color-scheme: dark light;
+      --bg: #000;
+      --web-bg-image: url("image/sea.webp");
+      --muted: #8b93a6;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background-color: var(--bg);
+      background-image: var(--web-bg-image);
+      background-position: center;
+      background-size: cover;
+      background-repeat: no-repeat;
+      color: #fff;
+      font-family: "TikTok Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      min-height: 100vh;
+    }
+    body.transparent-bg,
+    body.transparent-bg .host-layout {
+      background: transparent !important;
+    }
+    .host-layout {
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      overflow: hidden;
+      background-color: transparent;
+    }
+    .video-wrap,
+    .room-panel,
+    .animation-box {
+      position: absolute;
+      background: #0b0d10;
+      border: none;
+      border-radius: 0;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
+      overflow: hidden;
+      touch-action: none;
+    }
+    .firework-box {
+      background: transparent;
+      border: 1px solid transparent;
+      box-shadow: none;
+      overflow: visible;
+      pointer-events: none;
+    }
+    /* ── Gift sender capsule ── */
+    @keyframes giftCapsuleSlideIn {
+      from { transform: translateX(-110%); opacity: 0; }
+      to   { transform: translateX(0);    opacity: 1; }
+    }
+    @keyframes giftCapsuleSlideOut {
+      from { transform: translateX(0);    opacity: 1; }
+      to   { transform: translateX(-110%); opacity: 0; }
+    }
+    .gift-sender-capsule {
+      position: absolute;
+      z-index: 36;
+      pointer-events: none;
+      transform-origin: left center;
+      user-select: none;
+      touch-action: none;
+    }
+    .gift-sender-capsule-inner {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(to right, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.0) 100%);
+      border-radius: 999px;
+      padding: 5px 12px 5px 5px;
+    }
+    .gift-sender-capsule-inner.capsule-slide-in {
+      animation: giftCapsuleSlideIn 0.5s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    .gift-sender-capsule-inner.capsule-slide-out {
+      animation: giftCapsuleSlideOut 0.5s cubic-bezier(.22,1,.36,1) forwards;
+    }
+    .gift-sender-capsule.edit-capsule {
+      border: 2px dashed #5dd1ff;
+      pointer-events: auto;
+      cursor: move;
+    }
+    .gift-sender-capsule.edit-capsule::after {
+      content: "";
+      position: absolute;
+      right: -6px;
+      bottom: -6px;
+      width: 18px;
+      height: 18px;
+      background: #5dd1ff;
+      border-radius: 3px;
+      cursor: nwse-resize;
+      pointer-events: auto;
+    }
+    .gift-sender-capsule.edit-capsule .gift-sender-capsule-inner {
+      background: rgba(10,20,30,0.82);
+      pointer-events: none;
+    }
+    .gift-sender-avatar {
+      width: 42px;
+      height: 42px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      background: #333;
+    }
+    .gift-sender-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-width: 0;
+    }
+    .gift-sender-name {
+      font-size: 13px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 140px;
+      line-height: 1.3;
+    }
+    .gift-sender-label {
+      font-size: 12px;
+      color: rgba(255,255,255,0.65);
+      line-height: 1.3;
+    }
+    .gift-sender-icon {
+      width: 36px;
+      height: 36px;
+      object-fit: contain;
+      flex-shrink: 0;
+    }
+    /* ── Gift Received center card (mode2 gift sends) ── */
+    @keyframes giftReceivedIn {
+      from { opacity: 0; transform: translateY(16px) scale(0.9); }
+      to   { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes giftReceivedOut {
+      from { opacity: 1; transform: translateY(0) scale(1); }
+      to   { opacity: 0; transform: translateY(-12px) scale(0.96); }
+    }
+    /* Outer wrapper holds position + edit-scale only (so drag/resize never
+       fights the entrance animation, which lives on the inner element). */
+    .gift-received-card {
+      position: absolute;
+      left: 70px;
+      top: 420px;
+      z-index: 40;
+      display: none;
+      transform-origin: left center;
+      pointer-events: none;
+      user-select: none;
+    }
+    .gift-received-card.gr-active { display: block; }
+    .gift-received-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      width: min(76vw, 290px);
+      padding: 22px 26px 20px;
+      background: rgba(26, 26, 30, 0.92);
+      border-radius: 22px;
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.45);
+      text-align: center;
+    }
+    .gift-received-inner.gr-slide-in { animation: giftReceivedIn 0.45s cubic-bezier(.22,1,.36,1) forwards; }
+    .gift-received-inner.gr-slide-out { animation: giftReceivedOut 0.4s ease forwards; }
+    /* ── Custom reward board ── */
+    .custom-reward-box {
+      position: absolute; left: 0; top: 0; z-index: 36;
+      display: none; flex-direction: column; gap: 3px;
+      padding: 7px 12px; border-radius: 16px;
+      background: rgba(18, 18, 26, 0.82);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+      pointer-events: none; user-select: none;
+    }
+    .custom-reward-box.cr-show { display: flex; }
+    .cr-box-viewport { height: 40px; overflow: hidden; }
+    .cr-box-track { display: flex; flex-direction: column; }
+    .cr-box-track.cr-rolling { transition: transform 0.5s cubic-bezier(.22, 1, .36, 1); transform: translateY(-50%); }
+    .cr-box-row { height: 40px; display: flex; align-items: center; gap: 7px; white-space: nowrap; }
+    .cr-box-ico { width: 30px; height: 30px; object-fit: contain; flex: 0 0 auto; }
+    .cr-box-name { font-size: 14px; font-weight: 700; color: #fff; max-width: 130px; overflow: hidden; text-overflow: ellipsis; }
+    .cr-box-arrow { color: #5dd1ff; font-size: 16px; font-weight: 800; flex: 0 0 auto; }
+    .cr-box-arrow-media { width: 34px; height: 30px; object-fit: contain; }
+    .custom-reward-box.edit-card { pointer-events: auto; outline: 2px dashed rgba(93, 209, 255, 0.7); outline-offset: 3px; cursor: move; }
+    .gift-received-ring {
+      width: 94px;
+      height: 94px;
+      border-radius: 50%;
+      padding: 3px;
+      box-sizing: border-box;
+      background: linear-gradient(135deg, #ff62a5 0%, #ff2d6f 48%, #ff1f4b 100%);
+      flex-shrink: 0;
+    }
+    .gift-received-avatar {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      object-fit: cover;
+      background: #333;
+      border: 3px solid rgba(26, 26, 30, 0.92);
+      box-sizing: border-box;
+    }
+    .gift-received-name {
+      margin-top: 4px;
+      font-size: 22px;
+      font-weight: 800;
+      color: #fff;
+      line-height: 1.2;
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .gift-received-username {
+      font-size: 14px;
+      font-weight: 500;
+      color: #8e8e93;
+      line-height: 1.2;
+      max-width: 250px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .gift-received-btn {
+      margin-top: 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 11px 26px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, #ff2d6f 0%, #ff1f4b 100%);
+      color: #fff;
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      text-transform: uppercase;
+      box-shadow: 0 8px 22px rgba(255, 45, 95, 0.4);
+    }
+    .gift-received-btn .gr-gift {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .gift-received-btn .gr-gift svg {
+      width: 17px;
+      height: 17px;
+      fill: #ffcf3a;
+      display: block;
+    }
+    /* Edit mode: dashed outline + corner resize handle (mirrors gift capsule) */
+    .gift-received-card.edit-card { pointer-events: auto; cursor: move; }
+    .gift-received-card.edit-card .gift-received-inner {
+      outline: 2px dashed #5dd1ff;
+      outline-offset: 3px;
+    }
+    .gift-received-card.edit-card::after {
+      content: "";
+      position: absolute;
+      right: -7px;
+      bottom: -7px;
+      width: 18px;
+      height: 18px;
+      background: #5dd1ff;
+      border: 2px solid #0b1620;
+      border-radius: 4px;
+      cursor: nwse-resize;
+      pointer-events: auto;
+    }
+    .cam-bg {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+      z-index: 0;
+    }
+    .cam-bg-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: none;
+      z-index: 0;
+    }
+    .cam-tools {
+      position: fixed;
+      top: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 999;
+      display: none;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 6px;
+      padding: 8px;
+      background: rgba(15, 17, 21, 0.85);
+      border: 1px solid #232836;
+      border-radius: 10px;
+    }
+    .cam-tools.show { display: flex; }
+    .cam-tools button {
+      border: 1px solid #232836;
+      background: rgba(22, 26, 33, 0.9);
+      color: #e8ecf2;
+      padding: 6px 10px;
+      border-radius: 10px;
+      font-family: "TikTok Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-size: 12px;
+      cursor: pointer;
+    }
+    .cam-tools button.active {
+      border-color: #5dd1ff;
+      box-shadow: 0 6px 18px rgba(93, 209, 255, 0.2);
+    }
+    /* ✕ close button pinned to the panel's top-right corner (shown with panel) */
+    .cam-tools .cam-tools-close {
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 24px;
+      height: 24px;
+      min-width: 0;
+      padding: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 1px solid #232836;
+      background: #e53e3e;
+      color: #fff;
+      font-size: 13px;
+      line-height: 1;
+      cursor: pointer;
+      z-index: 1;
+    }
+    .cam-tools.show .cam-tools-close { display: inline-flex; }
+    .cam-ai-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      z-index: 2;
+      pointer-events: none;
+    }
+    .cam-vrm-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      z-index: 2;
+      pointer-events: none;
+      background: transparent;
+    }
+    .cam-seg-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .cam-chroma-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: none;
+      z-index: 1;
+      pointer-events: none;
+    }
+    .chroma-bg-hidden {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      opacity: 0;
+      pointer-events: none;
+      z-index: -1;
+    }
+    .animation-box {
+      background: transparent;
+      border: 2px dashed #ff9a3c;
+      box-shadow: none;
+      overflow: visible;
+      isolation: auto;
+    }
+    .video-wrap { background: #000; position: relative; overflow: hidden; }
+    /* Shown instead of a silent black screen when the camera can't be accessed. */
+    .cam-status {
+      position: absolute;
+      inset: 0;
+      z-index: 6;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 14px;
+      box-sizing: border-box;
+      background: rgba(8, 10, 14, 0.82);
+      color: #e6edf6;
+      font: 600 13px/1.45 "TikTok Sans", "Segoe UI", Arial, sans-serif;
+      pointer-events: none;
+    }
+    .cam-status[hidden] { display: none; }
+    .video-wrap.cam-speaking::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: var(--speaking-border-radius, 10px);
+      box-shadow: inset 0 0 0 2px #37d9ff, 0 0 18px rgba(55, 217, 255, 0.45);
+      z-index: 10;
+      pointer-events: none;
+    }
+    .video-wrap.cam-hidden {
+      background: transparent;
+    }
+    .video-wrap.cam-hidden video,
+    .video-wrap.cam-hidden .cam-bg,
+    .video-wrap.cam-hidden .cam-bg-video,
+    .video-wrap.cam-hidden .cam-seg-canvas,
+    .video-wrap.cam-hidden .cam-chroma-canvas,
+    .video-wrap.cam-hidden .cam-ai-canvas,
+    .video-wrap.cam-hidden .cam-vrm-canvas {
+      display: none !important;
+      opacity: 0 !important;
+    }
+    /* Cam OFF but a background is set: hide only the live-camera layers and keep
+       showing the cam background. IMPORTANT: target #camera (the live webcam),
+       NOT `video` — the cam background is ALSO a <video> element, so a bare
+       `video` selector here would hide the background too and leave it black. */
+    .video-wrap.cam-bg-only #camera,
+    .video-wrap.cam-bg-only .cam-seg-canvas,
+    .video-wrap.cam-bg-only .cam-chroma-canvas,
+    .video-wrap.cam-bg-only .cam-ai-canvas,
+    .video-wrap.cam-bg-only .cam-vrm-canvas {
+      display: none !important;
+      opacity: 0 !important;
+    }
+    .room-panel {
+      padding: 0;
+      display: none;
+      background: transparent;
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+    .room-panel.show { display: block; }
+    video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      background: transparent;
+      pointer-events: none;
+      position: relative;
+      z-index: 1;
+    }
+    /* PRIVACY: the live camera starts HIDDEN. A hard refresh grants camera
+       permission instantly, so without this the host's face flashes on screen
+       before applyCamVisibility() / the cam background can cover it. It is only
+       revealed when applyCamVisibility() sets an inline opacity of 1 (cam on,
+       no background, no VRM/segmentation). */
+    #camera { opacity: 0; }
+    video.cam-ai-face {
+      filter: saturate(1.25) contrast(1.06) brightness(1.05) blur(0.4px);
+    }
+    .room-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 0;
+    }
+    .slot {
+      border: none;
+      border-radius: 0;
+      min-height: 120px;
+      background: #14171c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 6px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+    .slot-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      z-index: 0;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    .slot-bg img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 200%;
+      height: 200%;
+      object-fit: cover;
+      filter: blur(14px) saturate(1.4) brightness(0.65);
+    }
+    .slot > *:not(.slot-bg):not(.seat-pill):not(.seat-mute):not(.slot-avatar):not(.seat-lion-icon):not(.slot-video):not(.slot-video-upload) { position: relative; z-index: 1; }
+    .slot .plus { font-size: 36px; line-height: 1; color: #b3b3b3; }
+    .slot .label { color: #b3b3b3; font-size: 14px; font-weight: 700; }
+    .resize-handle { display: none; }
+    /* ── Group multi-select (marquee) overlays ── */
+    .group-marquee {
+      position: absolute;
+      z-index: 99999;
+      border: 1.5px solid #4ea1ff;
+      background: rgba(78, 161, 255, 0.16);
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+    .group-bbox {
+      position: absolute;
+      z-index: 99998;
+      border: 1.5px dashed #4ea1ff;
+      pointer-events: none;
+      box-sizing: border-box;
+    }
+    .group-bbox .gbox-handle {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      background: #fff;
+      border: 1.5px solid #4ea1ff;
+      border-radius: 2px;
+      box-sizing: border-box;
+    }
+    .group-bbox .gbox-handle.tl { left: -7px; top: -7px; cursor: nwse-resize; }
+    .group-bbox .gbox-handle.tr { right: -7px; top: -7px; cursor: nesw-resize; }
+    .group-bbox .gbox-handle.bl { left: -7px; bottom: -7px; cursor: nesw-resize; }
+    .group-bbox .gbox-handle.br { right: -7px; bottom: -7px; cursor: nwse-resize; }
+    .group-selected { outline: 2px solid #4ea1ff !important; outline-offset: 1px; }
+    /* Per-layout On/Off chips shown in edit mode at each box's top-left. */
+    .edit-layout-toggle {
+      position: absolute;
+      z-index: 100000;
+      transform: translateY(-100%);
+      margin-top: -2px;
+      padding: 2px 8px;
+      font: 700 11px/1.3 "TikTok Sans", "Segoe UI", Arial, sans-serif;
+      white-space: nowrap;
+      color: #08210f;
+      background: #28c76f;
+      border: 1px solid rgba(0,0,0,0.25);
+      border-radius: 6px;
+      cursor: pointer;
+      pointer-events: auto;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    }
+    .edit-layout-toggle.is-off { color: #2b0f12; background: #9aa4b2; }
+    .slot-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; background: transparent; border: none; box-shadow: none; }
+    .slot-video {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      background: #000;
+      display: none;
+      pointer-events: none;
+    }
+    .slot-video-upload {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 3;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 4px;
+      background: rgba(10, 14, 22, 0.85);
+      color: #fff;
+      border: 2px dashed #5dd1ff;
+      border-radius: inherit;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      text-align: center;
+      padding: 6px;
+      user-select: none;
+      box-sizing: border-box;
+    }
+    .slot-video-upload:hover { background: rgba(20, 30, 50, 0.92); }
+    .slot-video-upload .upload-icon { font-size: 22px; line-height: 1; }
+    .slot-video-input { display: none; }
+    /* Centered "upload image/video" button on the cam — only shown in edit
+       layout mode (via .show). Triggers the same camBgFile input as BG Tool. */
+    .cam-bg-edit-upload {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 40;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      max-width: 88%;
+      padding: 12px 18px;
+      background: rgba(10, 14, 22, 0.85);
+      color: #fff;
+      border: 2px dashed #5dd1ff;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 1.2;
+      text-align: center;
+      user-select: none;
+      box-sizing: border-box;
+    }
+    .cam-bg-edit-upload.show { display: inline-flex; }
+    .cam-bg-edit-upload:hover { background: rgba(20, 30, 50, 0.92); }
+    .cam-bg-edit-upload .cbe-icon { font-size: 26px; line-height: 1; }
+    .slot.occupied .slot-avatar {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .seat-pill {
+      position: absolute;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 2px;
+      height: 20px;
+      padding: 0 6px;
+      background: rgba(45, 49, 57, 0.92);
+      border-radius: 999px;
+      font-size: 11px;
+      font-family: "TikTok Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      color: #e8ecf2;
+      white-space: nowrap;
+      z-index: 6;
+    }
+    .seat-pill-top { top: 4px; left: 4px; padding-left: 2px; }
+    .host-pill {
+      z-index: 4;
+      min-width: auto;
+      padding: 0;
+      background: transparent;
+      border: none;
+      box-shadow: none;
+    }
+    .host-pill img {
+      height: 16px;
+      width: 48px;
+      display: block;
+    }
+    .cam-name-pill {
+      z-index: 4;
+      min-width: 48px;
+      padding: 0 10px;
+      justify-content: center;
+      text-align: center;
+    }
+    .cam-name-pill.no-capsule {
+      background: transparent;
+    }
+    .seat-pill-bottom.cam-name-pill {
+      padding-left: 10px;
+      padding-right: 10px;
+    }
+    .seat-pill-bottom { bottom: 4px; left: 4px; padding-right: 2px; max-width: 80%; }
+    .seat-pill-icon { width: 16px; height: 24px; display: block; }
+    .seat-name-text { font-weight: 400; font-size: 10px; line-height: 16px; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+    .seat-lion-icon {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      left: auto;
+      bottom: auto;
+      display: none;
+      width: 24px;
+      height: 24px;
+      opacity: 0;
+      transform: scale(1);
+      z-index: 3;
+      pointer-events: none;
+    }
+    .seat-lion-icon.seat-lion-show {
+      display: block;
+      animation: seatLionFlash 4s ease-in-out;
+    }
+    @keyframes seatLionFlash {
+      0% { opacity: 0; transform: scale(1); }
+      10% { opacity: 1; transform: scale(1); }
+      75% { opacity: 1; transform: scale(1); }
+      100% { opacity: 0; transform: scale(1); }
+    }
+    .seat-points-wrap {
+      overflow: hidden;
+      height: 16px;
+      display: inline-block;
+      position: relative;
+      vertical-align: middle;
+    }
+    .seat-points-text {
+      display: block;
+      line-height: 16px;
+      height: 16px;
+    }
+    .seat-points-roller {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .seat-points-roller > span {
+      height: 16px;
+      line-height: 16px;
+      display: block;
+    }
+    .seat-points-roller.rolling {
+      animation: seatPointsRoll 0.45s ease-out forwards;
+    }
+    @keyframes seatPointsRoll {
+      0%   { transform: translateY(0); }
+      100% { transform: translateY(-50%); }
+    }
+    .seat-plus-circle {
+      width: 16px;
+      height: 16px;
+    
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      background: #464a4f;
+      color: #fff;
+      font-size: 18px;
+      line-height: 16px;
+      
+    }
+    .seat-plus-glyph {
+      display: block;
+      line-height: 1;
+      transform: translate(0.5px, -1px);
+    }
+    .seat-mute {
+      position: absolute;
+      right: 2px;
+      bottom: 2px;
+      width: 16px;
+      height: 22px;
+      opacity: 0.9;
+      z-index: 4;
+    }
+    .gift-overlay {
+      position: absolute;
+      z-index: 1;
+      pointer-events: none;
+      display: none;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      isolation: auto;
+      /* Custom translucent fade from the top (configurable from mode2,
+         default 20%). The mask is applied to the media elements (video /
+         chroma canvas / pag canvas / tint) rather than the overlay box, so the
+         fade is measured from the true top edge of each animation. This keeps
+         tall 2x-height gifts (Zeus, TikTok Universe) from being sliced in half
+         and removes the repeat seam ("line crop") at the overlay box edge. */
+      --anim-fade-top: 20%;
+    }
+    .gift-overlay.show {
+      display: block;
+    }
+    /* Custom color tint overlay – mirrors the playing video/canvas footprint and
+       blends a user-picked color on top. Strength is controlled via --anim-tint-alpha
+       (0..1). Default alpha 0 so existing behaviour is unchanged. */
+    .gift-overlay .gift-tint {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: var(--anim-tint-color, #000000);
+      opacity: var(--anim-tint-alpha, 0);
+      mix-blend-mode: multiply;
+      z-index: 2;
+      display: block;
+    }
+    /* Solid colour backdrop rendered BEHIND the gift animation (toggle from
+       Mode 2). Sits at the bottom of the overlay stack so the lion/other gift
+       shows on top of it; faded from the top by --anim-shadow-fade-top. */
+    .gift-shadow {
+      position: absolute;
+      left: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      display: none;
+      background: var(--anim-shadow-color, #000000);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black var(--anim-shadow-fade-top, 10%), black 100%);
+              mask-image: linear-gradient(to bottom, transparent 0%, black var(--anim-shadow-fade-top, 10%), black 100%);
+      -webkit-mask-repeat: no-repeat;
+              mask-repeat: no-repeat;
+      -webkit-mask-size: 100% 100%;
+              mask-size: 100% 100%;
+    }
+    /* Only show the backdrop while a gift is actually playing and it's enabled. */
+    .gift-overlay.show .gift-shadow.on { display: block; }
+    /* Match the tall (200%) bottom-anchored gifts so the backdrop covers them
+       and its fade reaches into the visible box (same doubling as the media). */
+    .gift-overlay.android-lion .gift-shadow,
+    .gift-overlay.lion-upgrade .gift-shadow {
+      height: 200%;
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black calc(var(--anim-shadow-fade-top, 10%) * 2), black 100%);
+              mask-image: linear-gradient(to bottom, transparent 0%, black calc(var(--anim-shadow-fade-top, 10%) * 2), black 100%);
+    }
+    .gift-overlay.lion-upgrade {
+      overflow: visible;
+    }
+    .gift-overlay.lion-upgrade video {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 200%;
+      object-fit: fill;
+    }
+    .gift-overlay.lion-upgrade canvas.gift-canvas {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 200%;
+    }
+    .gift-overlay.lion-upgrade::before {
+      display: none;
+    }
+    .gift-overlay.android-lion {
+      overflow: visible;
+    }
+    .gift-overlay.android-lion video {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 200%;
+      object-fit: fill;
+    }
+    .gift-overlay.android-lion::before {
+      display: none;
+    }
+    .gift-overlay::before {
+      content: '';
+      position: absolute;
+      top: 20%;
+      left: 0;
+      right: 0;
+      height: 60%;
+      background: transparent;
+      pointer-events: none;
+      z-index: 1;
+      mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black 20%, black 80%, transparent 100%);
+    }
+    .gift-overlay video {
+      width: 100%;
+      height: 100%;
+      object-fit: fill;
+      display: block;
+      background: transparent;
+      opacity: 0;
+      -webkit-user-select: none;
+      user-select: none;
+      /* Hide native video controls so there's no download button */
+      pointer-events: none;
+      /* GPU compositing for smoother playback on mobile */
+      will-change: opacity;
+      transform: translateZ(0);
+    }
+    .gift-overlay video.playing {
+      opacity: 1;
+    }
+    .gift-overlay video.use-canvas {
+      position: absolute;
+      opacity: 0 !important;
+      pointer-events: none;
+      width: 1px;
+      height: 1px;
+    }
+    .gift-overlay canvas.gift-canvas {
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: transparent;
+    }
+    /* libpag (.pag TikTok gift effect) render target — mirrors the video footprint */
+    .gift-overlay canvas.gift-pag-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      background: transparent;
+      pointer-events: none;
+    }
+    .gift-overlay.lion-upgrade canvas.gift-pag-canvas,
+    .gift-overlay.android-lion canvas.gift-pag-canvas {
+      position: absolute;
+      top: auto;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 200%;
+    }
+    /* Fade-from-top mask — applied per media element so it tracks the real
+       animation height (100% normal, 200% for Zeus / TikTok Universe etc.).
+       no-repeat + size 100% 100% stops the gradient from tiling above the
+       element, which previously caused a hard seam across the middle of the
+       2x gifts and a "line crop" at the top of normal ones. */
+    .gift-overlay video,
+    .gift-overlay canvas.gift-canvas,
+    .gift-overlay canvas.gift-pag-canvas,
+    .gift-overlay .gift-tint {
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, black var(--anim-fade-top, 20%), black 100%);
+              mask-image: linear-gradient(to bottom, transparent 0%, black var(--anim-fade-top, 20%), black 100%);
+      -webkit-mask-repeat: no-repeat;
+              mask-repeat: no-repeat;
+      -webkit-mask-size: 100% 100%;
+              mask-size: 100% 100%;
+    }
+    /* Lion renders at 200% height and its source has a solid BLACK sky in the
+       top third that otherwise sits as a hard band above the animation box. The
+       element top is one box-height above the box, so a normal top-fade lands on
+       that off-screen band and looks like it does nothing. Anchor the fade to the
+       box instead: always hide everything above ~the box top (kills the black
+       sky) and let the "Fade from top" slider push the fade further down into the
+       visible box. */
+    .gift-overlay.android-lion video,
+    .gift-overlay.android-lion canvas.gift-canvas {
+      -webkit-mask-image: linear-gradient(to bottom, transparent 0%, transparent 38%, black calc(50% + var(--anim-fade-top, 10%)), black 100%);
+              mask-image: linear-gradient(to bottom, transparent 0%, transparent 38%, black calc(50% + var(--anim-fade-top, 10%)), black 100%);
+    }
+    .live-firework {
+      position: absolute;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 80;
+    }
+    .live-firework.show { display: flex; }
+    .live-firework-core {
+      position: relative;
+      width: min(14vw, 84px);
+      aspect-ratio: 1 / 1;
+      border-radius: 999px;
+      overflow: hidden;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 0 16px rgba(255, 200, 0, 0.4), 0 0 28px rgba(255, 96, 96, 0.3);
+      animation: liveFireworkFlight 0.58s ease-out forwards;
+      background: rgba(12, 16, 24, 0.96);
+      opacity: 1;
+      transition: opacity 0.2s ease;
+    }
+    .live-firework.center-hidden .live-firework-core { opacity: 0; }
+    .live-firework-avatar,
+    .live-firework-gift {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: opacity 0.2s ease;
+    }
+    .live-firework-gift {
+      opacity: 0;
+      object-fit: contain;
+      padding: 22%;
+    }
+    .live-firework-burst {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      border-radius: 999px;
+      object-fit: cover;
+      background: rgba(12, 16, 24, 0.98);
+      border: 2px solid rgba(255, 255, 255, 0.95);
+      box-shadow: 0 0 14px rgba(255, 220, 120, 0.62);
+      transform: translate(var(--fx, 0), var(--fy, 0)) scale(0);
+      animation: liveBurst 0.56s ease-out forwards;
+      animation-delay: var(--delay, 0ms);
+      opacity: 0;
+    }
+    @keyframes liveFireworkFlight {
+      0% { transform: translate(var(--origin-x, 0px), calc(var(--origin-y, 0px) + 120px)) scale(0.28); opacity: 0; }
+      25% { opacity: 1; }
+      100% { transform: translate(var(--origin-x, 0px), calc(var(--origin-y, 0px) - 14px)) scale(0.9); opacity: 1; }
+    }
+    @keyframes liveBurst {
+      0% { transform: translate(var(--origin-x, 0px), var(--origin-y, 0px)) scale(0.1); opacity: 0.95; }
+      100% { transform: translate(calc(var(--origin-x, 0px) + var(--fx, 0px)), calc(var(--origin-y, 0px) + var(--fy, 0px))) scale(1.5); opacity: 0; }
+    }
+    .sound-prompt {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0, 0, 0, 0.55);
+      z-index: 2000;
+    }
+
+    /* ── Seat Style 2: single-column with same slot design ── */
+    .room-panel.style2-active {
+      border: none;
+      box-shadow: none;
+    }
+    .style2-request-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 36px;
+      padding: 6px 16px;
+      border: none;
+      border-radius: 0;
+      background: rgba(128,128,128,0.50);
+      color: #e8ecf2;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: "TikTok Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      margin: 0;
+      flex-shrink: 0;
+    }
+    .sound-prompt.hidden { display: none; }
+    .sound-prompt button {
+      border: 1px solid #232836;
+      background: rgba(22, 26, 33, 0.95);
+      color: #e8ecf2;
+      padding: 12px 18px;
+      border-radius: 12px;
+      font-family: "TikTok Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    /* ── Decorate Overlay ── */
+    #decorLayer {
+      position: absolute;
+      inset: 0;
+      z-index: 900;
+      pointer-events: none;
+      overflow: hidden;
+    }
+    #decorLayer.edit-mode { pointer-events: auto; }
+    .decor-item {
+      position: absolute;
+      left: 10%;
+      top: 10%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      user-select: none;
+      touch-action: none;
+      cursor: default;
+    }
+    #decorLayer.edit-mode .decor-item { cursor: move; }
+    .decor-item img,
+    .decor-item video {
+      display: block;
+      max-width: 100%;
+      max-height: 100%;
+      pointer-events: none;
+    }
+    .decor-item .decor-text {
+      white-space: pre-wrap;
+      pointer-events: none;
+      line-height: 1.2;
+      text-shadow: 0 2px 8px rgba(0,0,0,0.7);
+    }
+    /* Remove (×) button */
+    .decor-remove-btn {
+      display: none;
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: rgba(220,40,40,0.92);
+      color: #fff;
+      border: none;
+      font-size: 13px;
+      line-height: 22px;
+      text-align: center;
+      cursor: pointer;
+      z-index: 1;
+      padding: 0;
+      font-family: inherit;
+    }
+    #decorLayer.edit-mode .decor-remove-btn { display: block; }
+    /* Resize handle */
+    .decor-resize-handle {
+      display: none;
+      position: absolute;
+      bottom: -8px;
+      right: -8px;
+      width: 18px;
+      height: 18px;
+      background: rgba(93,209,255,0.85);
+      border-radius: 50%;
+      cursor: se-resize;
+      z-index: 2;
+    }
+    #decorLayer.edit-mode .decor-resize-handle { display: block; }
+  

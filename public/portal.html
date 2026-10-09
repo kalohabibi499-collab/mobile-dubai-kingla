@@ -1,0 +1,891 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TikTokkingDubai Access</title>
+  <style>
+    :root {
+      --bg: #0f1115;
+      --card: #161a21;
+      --text: #e8ecf2;
+      --muted: #8b93a6;
+      --accent: #5dd1ff;
+      --border: #232836;
+      --danger: #ff5c5c;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "TikTok Sans", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+      background: radial-gradient(circle at 20% 20%, rgba(93, 209, 255, 0.1), transparent 28%),
+                  radial-gradient(circle at 80% 0%, rgba(155, 123, 255, 0.12), transparent 35%),
+                  var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+    .hidden { display: none !important; }
+
+    .login-screen {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+    }
+    .login-card {
+      width: min(460px, 100%);
+      background: rgba(22, 26, 33, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.35);
+      text-align: left;
+    }
+    .login-card h1 { margin: 0 0 8px; }
+    .login-card p { margin: 0 0 16px; color: var(--muted); }
+    .login-card label { display: block; font-weight: 700; margin: 12px 0 6px; }
+    .login-card input {
+      width: 100%;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b0f16;
+      color: var(--text);
+    }
+    .login-card button[type="submit"] {
+      width: 100%;
+      margin-top: 12px;
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(93,209,255,0.18), rgba(155,123,255,0.18));
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .login-card .contact-btn {
+      width: 100%;
+      margin-top: 10px;
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      padding: 12px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .login-error { color: var(--danger); margin-top: 10px; }
+    .login-attempts { margin-top: 8px; color: var(--muted); }
+    .login-footnote { margin-top: 14px; font-size: 13px; color: var(--muted); }
+
+    .app-shell {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 32px;
+    }
+    .app-card {
+      width: min(520px, 100%);
+      background: rgba(22, 26, 33, 0.9);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.35);
+      text-align: center;
+    }
+    .app-actions { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; margin-top: 16px; }
+    .display-name-row {
+      margin-top: 14px;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .display-name-input {
+      width: min(280px, 100%);
+      padding: 10px 12px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: #0b0f16;
+      color: var(--text);
+    }
+    .pill-button {
+      border: 1px solid var(--border);
+      background: linear-gradient(135deg, rgba(93,209,255,0.18), rgba(155,123,255,0.18));
+      color: var(--text);
+      padding: 10px 14px;
+      border-radius: 999px;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .pill-button.secondary { background: transparent; }
+
+    .portal-live-panel {
+      margin-top: 18px;
+      text-align: left;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+      display: grid;
+      gap: 10px;
+    }
+    .portal-live-head {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .portal-live-title {
+      margin: 0;
+      font-size: 16px;
+    }
+    .portal-live-status {
+      margin-left: auto;
+      color: var(--muted);
+      font-size: 12px;
+    }
+    .portal-live-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .portal-live-field label {
+      font-weight: 700;
+      font-size: 13px;
+      color: var(--text);
+    }
+    .portal-live-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    /* Lion upgrade download progress */
+    .lion-dl-bar {
+      margin-top: 18px;
+      display: none;
+    }
+    .lion-dl-bar.active { display: block; }
+    .lion-dl-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .lion-dl-track {
+      width: 100%;
+      height: 6px;
+      background: #1c2029;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .lion-dl-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #5dd1ff, #9b7bff);
+      border-radius: 999px;
+      transition: width 0.3s ease;
+    }
+    .lion-dl-done {
+      font-size: 12px;
+      color: #5dd1ff;
+      margin-top: 6px;
+      display: none;
+    }
+
+    .admin-panel {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 7, 11, 0.7);
+      backdrop-filter: blur(8px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      z-index: 2000;
+    }
+    .admin-panel.active { display: flex; }
+    .admin-card {
+      width: min(960px, 100%);
+      background: #121620;
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 24px;
+      max-height: 90vh;
+      overflow: auto;
+    }
+    .admin-heading { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
+    .admin-label { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.12em; }
+    .admin-heading-actions { display: flex; gap: 10px; }
+    .admin-stats-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); margin: 18px 0; }
+    .admin-stat-card { background: #0b0f16; border: 1px solid var(--border); border-radius: 14px; padding: 12px; }
+    .stat-label { color: var(--muted); font-size: 12px; margin: 0; }
+    .stat-value { margin: 6px 0 0; font-size: 22px; font-weight: 700; }
+    .admin-section { margin-top: 18px; }
+    .admin-form-grid { display: grid; gap: 12px; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); }
+    .admin-form-grid label { display: block; font-weight: 700; margin-bottom: 6px; }
+    .admin-form-grid input, .admin-form-grid select {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      background: #0b0f16;
+      color: var(--text);
+    }
+    .users-list { display: grid; gap: 10px; }
+    .user-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      background: #0b0f16;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .user-meta { color: var(--muted); font-size: 12px; margin-top: 6px; }
+    .user-actions { display: flex; gap: 6px; flex-wrap: wrap; }
+    .user-actions button {
+      border: 1px solid var(--border);
+      background: transparent;
+      color: var(--text);
+      padding: 6px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 12px;
+    }
+    .user-actions .delete-user { border-color: var(--danger); color: var(--danger); }
+    .user-tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 6px; }
+    .user-tag {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 6px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .user-tag.active { background: rgba(16, 185, 129, 0.2); color: #10b981; }
+    .user-tag.pending { background: rgba(245, 158, 11, 0.2); color: #f59e0b; }
+    .user-tag.expiring { background: rgba(239, 68, 68, 0.2); color: #ef4444; }
+    .user-tag.addon-on { background: rgba(93, 209, 255, 0.2); color: #5dd1ff; }
+    .user-tag.addon-off { background: rgba(139, 147, 166, 0.15); color: #8b93a6; }
+    .empty-state-card { text-align: center; color: var(--muted); padding: 16px; }
+
+
+/* ── Clean TikTok-style login/admin refresh (no AI gradient) ── */
+:root{--bg:#f4f5f6;--card:#ffffff;--text:#101114;--muted:#68707c;--accent:#fe2c55;--accent2:#25f4ee;--border:#e5e7eb;--danger:#e11d48;}
+body{background:#f4f5f6!important;color:var(--text)!important;font-family:-apple-system,BlinkMacSystemFont,"Inter","Segoe UI",Arial,sans-serif!important;}
+.login-screen{background:#f4f5f6!important;padding:24px 16px!important;}
+.login-card{width:min(420px,100%)!important;background:#fff!important;color:#101114!important;border:1px solid #e5e7eb!important;border-radius:24px!important;padding:30px 28px 26px!important;box-shadow:0 24px 70px rgba(15,23,42,.10)!important;text-align:left!important;}
+.login-card::before{content:"";display:block;width:54px;height:54px;margin:0 auto 16px;border-radius:18px;background:#111 url('image/tiktokicon.png') center/70% no-repeat;box-shadow:0 14px 30px rgba(0,0,0,.18);}
+.login-card h1{margin:0 0 8px!important;text-align:center!important;font-size:30px!important;letter-spacing:-.04em!important;color:#101114!important;}
+.login-card p{margin:0 0 22px!important;text-align:center!important;color:#69727f!important;font-size:14px!important;line-height:1.55!important;}
+.login-card label{display:block!important;margin:13px 0 7px!important;font-size:13px!important;font-weight:750!important;color:#252a31!important;}
+.login-card input{width:100%!important;background:#f9fafb!important;border:1px solid #d9dee6!important;border-radius:14px!important;color:#111827!important;padding:13px 14px!important;font-size:15px!important;transition:border-color .18s ease,box-shadow .18s ease,background .18s ease!important;}
+.login-card input:focus{outline:none!important;background:#fff!important;border-color:#111827!important;box-shadow:0 0 0 4px rgba(17,24,39,.08)!important;}
+.login-card button[type="submit"]{width:100%!important;margin-top:14px!important;border:0!important;background:#111827!important;color:#fff!important;padding:13px 16px!important;border-radius:14px!important;font-weight:800!important;font-size:15px!important;cursor:pointer!important;transition:transform .15s ease,background .18s ease!important;}
+.login-card button[type="submit"]:hover{background:#000!important;}
+.login-card button[type="submit"]:active{transform:scale(.985)!important;}
+.login-card .contact-btn{width:100%!important;margin-top:10px!important;border:1px solid #e1e5eb!important;background:#fff!important;color:#111827!important;padding:12px 16px!important;border-radius:14px!important;font-weight:750!important;cursor:pointer!important;box-shadow:0 5px 16px rgba(15,23,42,.04)!important;}
+.login-error{color:#dc2626!important;font-size:13px!important;text-align:center!important;}
+.login-attempts{color:#b45309!important;text-align:center!important;font-size:12px!important;}
+.app-shell{background:#f4f5f6!important;}
+.app-card{background:#fff!important;color:#101114!important;border:1px solid #e5e7eb!important;border-radius:24px!important;box-shadow:0 24px 70px rgba(15,23,42,.10)!important;}
+.pill-button{background:#111827!important;border:0!important;color:#fff!important;border-radius:999px!important;box-shadow:none!important;}
+.pill-button.secondary{background:#f3f4f6!important;color:#111827!important;border:1px solid #e5e7eb!important;}
+.admin-panel{background:rgba(15,23,42,.45)!important;backdrop-filter:blur(12px)!important;align-items:flex-start!important;padding:26px 16px!important;}
+.admin-card{width:min(1120px,100%)!important;background:#f8fafc!important;color:#111827!important;border:1px solid #e5e7eb!important;border-radius:28px!important;padding:26px!important;box-shadow:0 30px 80px rgba(15,23,42,.24)!important;}
+.admin-heading{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:22px!important;padding:18px!important;margin-bottom:16px!important;}
+.admin-heading h2{margin:3px 0 0!important;font-size:30px!important;letter-spacing:-.04em!important;}
+.admin-label{color:#6b7280!important;font-weight:800!important;letter-spacing:.11em!important;}
+.admin-stats-grid{gap:14px!important;margin:16px 0!important;}
+.admin-stat-card{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:22px!important;padding:18px!important;box-shadow:0 10px 30px rgba(15,23,42,.06)!important;}
+.stat-label{color:#6b7280!important;font-size:12px!important;font-weight:800!important;text-transform:uppercase!important;}
+.stat-value{color:#111827!important;font-size:32px!important;}
+.admin-section{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:24px!important;padding:22px!important;margin-top:16px!important;box-shadow:0 10px 30px rgba(15,23,42,.05)!important;}
+.admin-section h3{color:#111827!important;margin:0!important;font-size:22px!important;}
+.admin-form-grid{gap:14px!important;}
+.admin-form-grid label{font-size:13px!important;color:#374151!important;}
+.admin-form-grid input,.admin-form-grid select,.admin-toolbar input{background:#f9fafb!important;color:#111827!important;border:1px solid #d9dee6!important;border-radius:14px!important;padding:12px 13px!important;}
+.admin-form-grid input:focus,.admin-form-grid select:focus,.admin-toolbar input:focus{outline:none!important;border-color:#111827!important;box-shadow:0 0 0 4px rgba(17,24,39,.08)!important;}
+.users-list{gap:12px!important;}
+.user-row{background:#fff!important;border:1px solid #e5e7eb!important;border-radius:20px!important;box-shadow:0 6px 22px rgba(15,23,42,.05)!important;}
+.user-actions button{border:0!important;background:#f3f4f6!important;color:#111827!important;border-radius:999px!important;font-weight:800!important;}
+.user-actions .delete-user{background:#fee2e2!important;color:#b91c1c!important;}
+.contact-modal{position:fixed;inset:0;background:rgba(15,23,42,.50);backdrop-filter:blur(12px);display:none;align-items:center;justify-content:center;padding:24px;z-index:3500;}
+.contact-modal.show{display:flex;}
+.contact-card{width:min(390px,100%);background:#fff;border:1px solid #e5e7eb;border-radius:26px;padding:24px;box-shadow:0 30px 80px rgba(15,23,42,.28);color:#111827;}
+.contact-card-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:6px;}
+.contact-card h2{margin:0;font-size:24px;letter-spacing:-.03em;}
+.contact-card-sub{margin:0 0 16px;color:#69727f;font-size:13px;line-height:1.45;}
+.contact-card-close{border:0;background:#f3f4f6;color:#111827;width:36px;height:36px;border-radius:50%;font-size:22px;cursor:pointer;}
+.contact-row{display:flex;align-items:center;gap:13px;padding:13px;border:1px solid #e5e7eb;border-radius:18px;text-decoration:none;color:#111827;margin-top:10px;transition:transform .15s ease,border-color .15s ease,box-shadow .15s ease;}
+.contact-row:hover{transform:translateY(-1px);border-color:#111827;box-shadow:0 10px 24px rgba(15,23,42,.08);}
+.contact-row-icon{width:44px;height:44px;border-radius:15px;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:17px;flex:0 0 auto;}
+.contact-row-icon.tt{background:#111;box-shadow:4px 0 0 #fe2c55,-4px 0 0 #25f4ee;}
+.contact-row-icon.ig{background:linear-gradient(135deg,#f58529,#dd2a7b,#8134af,#515bd4);}
+.contact-row-icon.tg{background:#229ed9;}
+.contact-row-icon.dc{background:#5865f2;}
+.contact-row-label{display:block;font-size:12px;color:#6b7280;font-weight:700;}
+.contact-row-handle{display:block;font-size:15px;color:#111827;font-weight:850;}
+@media(max-width:650px){.admin-card{padding:16px!important;border-radius:22px!important}.admin-heading{flex-direction:column!important;align-items:flex-start!important}.admin-heading-actions{width:100%;justify-content:flex-start!important}.login-card{padding:26px 22px!important}}
+
+  
+
+/* FINAL dark-grey TikTok/DK login + managed admin/contact polish */
+:root{--dk-bg:#0d0f14;--dk-card:#171a22;--dk-card2:#1f2430;--dk-line:#2b3140;--dk-text:#f5f7fb;--dk-muted:#9ca6b7;--dk-blue:#0a84ff;--dk-green:#16a34a;--dk-red:#ef4444;--dk-tiktok:#fe2c55;}
+body{background:#0d0f14!important;color:var(--dk-text)!important;}
+.login-screen{background:linear-gradient(180deg,#11141b 0%,#0d0f14 100%)!important;padding:24px 16px!important;}
+.login-card{width:min(430px,100%)!important;background:#171a22!important;color:var(--dk-text)!important;border:1px solid #2b3140!important;border-radius:28px!important;padding:34px 30px 28px!important;box-shadow:0 28px 80px rgba(0,0,0,.45)!important;text-align:left!important;}
+.login-card::before{content:""!important;display:block!important;width:68px!important;height:68px!important;margin:0 auto 18px!important;border-radius:22px!important;background:#050608 url('/image/contact-tiktok.webp') center/76% no-repeat!important;box-shadow:0 18px 36px rgba(0,0,0,.35),0 0 0 1px rgba(255,255,255,.08) inset!important;}
+.login-card h1{color:#fff!important;text-align:center!important;font-size:31px!important;margin:0 0 7px!important;letter-spacing:-.04em!important;}
+.login-card h1::after{content:"";display:block;width:46px;height:3px;border-radius:999px;background:#0a84ff;margin:14px auto 0;}
+.login-card p{color:#aab4c3!important;text-align:center!important;margin:0 0 24px!important;font-size:14px!important;line-height:1.55!important;}
+.login-card label{color:#e5eaf3!important;font-size:13px!important;font-weight:800!important;margin:14px 0 8px!important;}
+.login-card input{background:#10131a!important;border:1px solid #303746!important;color:#fff!important;border-radius:16px!important;padding:14px 15px!important;font-size:15px!important;}
+.login-card input:focus{outline:none!important;border-color:#0a84ff!important;box-shadow:0 0 0 4px rgba(10,132,255,.16)!important;background:#0d1017!important;}
+.login-card button[type="submit"]{background:#0a84ff!important;color:#fff!important;border:0!important;border-radius:16px!important;padding:14px 16px!important;font-weight:900!important;font-size:15px!important;box-shadow:0 12px 30px rgba(10,132,255,.28)!important;}
+.login-card button[type="submit"]:hover{background:#0073e6!important;}
+.login-card .contact-btn{background:#202532!important;color:#f4f7fb!important;border:1px solid #303746!important;border-radius:16px!important;padding:13px 16px!important;font-weight:850!important;box-shadow:none!important;}
+.login-card .contact-btn:hover{border-color:#4b5568!important;background:#252b3a!important;}
+.app-shell{background:#0d0f14!important;}
+.app-card{background:#171a22!important;border:1px solid #2b3140!important;color:#f5f7fb!important;border-radius:28px!important;box-shadow:0 28px 80px rgba(0,0,0,.42)!important;}
+.pill-button{background:#0a84ff!important;color:#fff!important;border:0!important;border-radius:999px!important;font-weight:850!important;box-shadow:0 12px 26px rgba(10,132,255,.22)!important;}
+.pill-button.secondary{background:#252b36!important;color:#f5f7fb!important;border:1px solid #384052!important;box-shadow:none!important;}
+.admin-panel{background:rgba(3,5,10,.72)!important;backdrop-filter:blur(16px)!important;align-items:flex-start!important;padding:28px 16px!important;}
+.admin-card{width:min(1180px,100%)!important;background:#10131a!important;color:#f5f7fb!important;border:1px solid #2b3140!important;border-radius:30px!important;padding:24px!important;box-shadow:0 34px 90px rgba(0,0,0,.55)!important;}
+.admin-heading{background:#171a22!important;border:1px solid #2b3140!important;border-radius:24px!important;padding:20px!important;margin-bottom:16px!important;}
+.admin-heading h2{color:#fff!important;font-size:30px!important;margin:3px 0 0!important;letter-spacing:-.04em!important;}
+.admin-label{color:#8fa1ba!important;font-weight:900!important;letter-spacing:.12em!important;}
+.admin-stat-card{background:#171a22!important;border:1px solid #2b3140!important;border-radius:22px!important;padding:18px!important;box-shadow:none!important;}
+.stat-label{color:#9ca6b7!important;}
+.stat-value{color:#fff!important;}
+.admin-section{background:#171a22!important;border:1px solid #2b3140!important;border-radius:26px!important;padding:22px!important;margin-top:16px!important;box-shadow:none!important;}
+.admin-section h3{color:#fff!important;}
+.section-note,.user-meta{color:#a5adbb!important;}
+.admin-form-grid{gap:14px!important;}
+.admin-form-grid label{color:#dbe3ee!important;}
+.admin-form-grid input,.admin-form-grid select,.admin-toolbar input{background:#10131a!important;color:#fff!important;border:1px solid #303746!important;border-radius:16px!important;padding:13px 14px!important;}
+.admin-form-grid input:focus,.admin-form-grid select:focus,.admin-toolbar input:focus{outline:none!important;border-color:#0a84ff!important;box-shadow:0 0 0 4px rgba(10,132,255,.16)!important;}
+.admin-check-card{display:flex!important;align-items:flex-start!important;gap:12px!important;background:#10131a!important;border:1px solid #303746!important;border-radius:18px!important;padding:14px!important;cursor:pointer!important;margin:0!important;min-height:76px!important;}
+.admin-check-card input{position:absolute!important;opacity:0!important;pointer-events:none!important;}
+.admin-check-card strong{display:block;color:#fff;font-size:14px;margin-bottom:4px;}
+.admin-check-card small{display:block;color:#9ca6b7;font-size:12px;line-height:1.35;}
+.admin-check-ui{width:44px;height:26px;border-radius:999px;background:#303746;position:relative;flex:0 0 auto;margin-top:2px;transition:.2s;}
+.admin-check-ui span{position:absolute;width:20px;height:20px;border-radius:50%;background:#fff;left:3px;top:3px;transition:.2s;box-shadow:0 2px 6px rgba(0,0,0,.25);}
+.admin-check-card input:checked + .admin-check-ui{background:#0a84ff;}
+.admin-check-card input:checked + .admin-check-ui span{transform:translateX(18px);}
+.user-row{background:#10131a!important;border:1px solid #303746!important;border-radius:20px!important;padding:16px!important;}
+.user-row strong{color:#fff!important;}
+.user-actions button{border:0!important;border-radius:999px!important;padding:8px 13px!important;font-weight:850!important;color:#fff!important;}
+.user-actions .add-day{background:#16a34a!important;}
+.user-actions .remove-day{background:#f59e0b!important;color:#111827!important;}
+.user-actions .edit-pass{background:#0a84ff!important;}
+.user-actions .delete-user{background:#ef4444!important;color:#fff!important;}
+.user-actions .play-corgi{background:#475569!important;color:#fff!important;}
+.user-tag.addon-on{background:rgba(22,163,74,.18)!important;color:#86efac!important;}
+.user-tag.addon-off{background:rgba(148,163,184,.16)!important;color:#cbd5e1!important;}
+.contact-modal{position:fixed!important;inset:0!important;background:rgba(2,4,10,.72)!important;backdrop-filter:blur(14px)!important;display:none!important;align-items:center!important;justify-content:center!important;padding:24px!important;z-index:3500!important;}
+.contact-modal.show{display:flex!important;}
+.contact-card{width:min(420px,100%)!important;background:#171a22!important;border:1px solid #303746!important;border-radius:28px!important;padding:24px!important;box-shadow:0 30px 90px rgba(0,0,0,.55)!important;color:#f5f7fb!important;}
+.contact-card-header{display:flex!important;justify-content:space-between!important;align-items:flex-start!important;gap:14px!important;margin-bottom:8px!important;}
+.contact-eyebrow{margin:0 0 4px!important;color:#8fa1ba!important;font-size:12px!important;text-transform:uppercase!important;letter-spacing:.12em!important;font-weight:900!important;}
+.contact-card h2{margin:0!important;color:#fff!important;font-size:25px!important;letter-spacing:-.03em!important;}
+.contact-card-sub{margin:0 0 16px!important;color:#aab4c3!important;font-size:13px!important;line-height:1.45!important;}
+.contact-card-close{border:0!important;background:#252b36!important;color:#fff!important;width:38px!important;height:38px!important;border-radius:50%!important;font-size:24px!important;cursor:pointer!important;}
+.contact-row{display:flex!important;align-items:center!important;gap:14px!important;padding:13px!important;border:1px solid #303746!important;border-radius:19px!important;text-decoration:none!important;color:#f5f7fb!important;margin-top:10px!important;background:#10131a!important;transition:transform .15s ease,border-color .15s ease,background .15s ease!important;}
+.contact-row:hover{transform:translateY(-1px)!important;border-color:#0a84ff!important;background:#141925!important;}
+.contact-row-icon{width:48px!important;height:48px!important;border-radius:16px!important;background:#0b0d12!important;display:flex!important;align-items:center!important;justify-content:center!important;overflow:hidden!important;flex:0 0 auto!important;}
+.contact-row-icon img{width:100%!important;height:100%!important;object-fit:contain!important;display:block!important;}
+.contact-row-label{display:block!important;color:#8fa1ba!important;font-size:12px!important;font-weight:800!important;}
+.contact-row-handle{display:block!important;color:#fff!important;font-size:15px!important;font-weight:900!important;}
+@media(max-width:650px){.admin-card{padding:16px!important;border-radius:22px!important}.admin-heading{flex-direction:column!important;align-items:flex-start!important}.admin-heading-actions{width:100%;justify-content:flex-start!important}.login-card{padding:28px 22px 24px!important}.admin-check-card{grid-column:1/-1!important}}
+</style>
+</head>
+<body>
+  <div id="loginScreen" class="login-screen">
+    <div class="login-card">
+      <h1>Dubai King Access</h1>
+      <p>Log in to open your TikTok live tools, remote panel and make-video studio.</p>
+      <form id="loginForm">
+        <label for="loginUsername">Username</label>
+        <input type="text" id="loginUsername" autocomplete="username" required />
+
+        <label for="loginPassword">Password</label>
+        <div style="position: relative; margin-bottom: 12px;">
+          <input type="password" id="loginPassword" autocomplete="current-password" required style="padding-right: 45px;" />
+          <button type="button" class="password-toggle" data-target="loginPassword" aria-label="Show password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; padding: 4px; cursor: pointer; color: var(--muted); line-height: 0; display: flex; align-items: center;">
+            <svg class="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+          </button>
+        </div>
+
+        <button type="submit" id="loginButton">Log in</button>
+        <button type="button" id="contactMeBtn" class="contact-btn">Contact Me</button>
+      </form>
+      <p id="loginError" class="login-error hidden"></p>
+      <div id="loginAttempts" class="login-attempts hidden">Attempts used: <span id="attemptValue">0</span>/5</div>
+    </div>
+  </div>
+
+  <div id="appShell" class="app-shell hidden">
+    <div class="app-card">
+      <h2>Welcome <span id="sessionUsername" class="hidden"></span></h2>
+      <p id="timeLeftBadge" class="hidden"></p>
+      <div class="app-actions">
+        <button class="pill-button" id="openHost">Open Mode 1 (Host)</button>
+        <button class="pill-button secondary" id="openRemote">Open Mode 2 (Remote)</button>
+        <button class="pill-button secondary" id="openMakeVideo">Make Video</button>
+        <button class="pill-button secondary" id="logoutBtn" type="button">Logout</button>
+      </div>
+
+
+    </div>
+  </div>
+
+  <div id="adminPanel" class="admin-panel" aria-hidden="true">
+    <div class="admin-card">
+      <div class="admin-heading">
+        <div>
+          <p class="admin-label">Control Center</p>
+          <h2>Admin Panel</h2>
+        </div>
+        <div class="admin-heading-actions">
+          <button class="pill-button secondary" type="button" id="refreshCustomersBtn">Refresh</button>
+          <button class="pill-button secondary" type="button" id="closeAdminBtn">Close</button>
+        </div>
+      </div>
+
+      <div class="admin-stats-grid">
+        <div class="admin-stat-card">
+          <p class="stat-label">Total users</p>
+          <p class="stat-value" id="totalUsersStat">0</p>
+        </div>
+        <div class="admin-stat-card">
+          <p class="stat-label">Active now</p>
+          <p class="stat-value" id="activeUsersStat">0</p>
+        </div>
+        <div class="admin-stat-card">
+          <p class="stat-label">Waiting</p>
+          <p class="stat-value" id="waitingUsersStat">0</p>
+        </div>
+        <div class="admin-stat-card">
+          <p class="stat-label">Expiring soon</p>
+          <p class="stat-value" id="expiringUsersStat">0</p>
+        </div>
+      </div>
+
+      <section class="admin-section">
+        <div class="section-heading">
+          <div>
+            <p class="admin-label">New pass</p>
+            <h3>Create customer</h3>
+          </div>
+        </div>
+        <form id="createUserForm">
+          <div class="admin-form-grid">
+            <div>
+              <label for="newUsername">Username</label>
+              <input type="text" id="newUsername" placeholder="new username" required />
+            </div>
+            <div>
+              <label for="newPassword">Password</label>
+              <div style="position: relative;">
+                <input type="password" id="newPassword" placeholder="temporary password" minlength="6" required style="padding-right: 45px;" />
+                <button type="button" class="password-toggle" data-target="newPassword" aria-label="Show password" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: transparent; border: none; padding: 4px; cursor: pointer; color: var(--muted); line-height: 0; display: flex; align-items: center;">
+                  <svg class="eye-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>
+                </button>
+              </div>
+            </div>
+            <div>
+              <label for="userDuration">Duration</label>
+              <select id="userDuration">
+                <option value="30">30 minutes (test)</option>
+                <option value="60">1 hour</option>
+                <option value="120">2 hours</option>
+                <option value="1440">1 day</option>
+                <option value="10080">1 week</option>
+                <option value="43200">1 month (30 days)</option>
+                <option value="129600">3 months</option>
+                <option value="259200">6 months</option>
+                <option value="525600">1 year</option>
+                <option value="custom">Custom minutes</option>
+              </select>
+            </div>
+            <div id="customDurationWrap" style="display: none;">
+              <label for="userCustomDuration">Custom Minutes</label>
+              <input type="number" id="userCustomDuration" min="1" max="525600" step="1" placeholder="Enter minutes" />
+            </div>
+            <label class="admin-check-card" for="newUserAddon">
+              <input type="checkbox" id="newUserAddon" />
+              <span class="admin-check-ui"><span></span></span>
+              <span><strong>Enable Make Video Add-on</strong><small>Allow this user to open the video/gift overlay tools.</small></span>
+            </label>
+            <label class="admin-check-card" for="newUserMakeVideoOnly">
+              <input type="checkbox" id="newUserMakeVideoOnly" />
+              <span class="admin-check-ui"><span></span></span>
+              <span><strong>Make Video only</strong><small>Hide Mode 1 and Mode 2 for this user.</small></span>
+            </label>
+          </div>
+          <div style="margin-top: 12px;">
+            <button class="pill-button" type="submit">Save customer</button>
+          </div>
+        </form>
+      </section>
+
+      <section class="admin-section">
+        <div class="section-heading">
+          <div>
+            <p class="admin-label">Customers</p>
+            <h3>Live sessions</h3>
+          </div>
+          <div class="section-actions">
+            <button class="pill-button secondary" type="button" id="deleteExpiredBtn">Delete expired</button>
+          </div>
+        </div>
+        <div class="admin-toolbar" style="margin: 12px 0;">
+          <input type="text" id="adminSearchInput" placeholder="Search username" />
+        </div>
+        <div class="users-list-wrapper">
+          <div id="usersList" class="users-list"></div>
+          <div id="adminEmptyState" class="empty-state-card" style="display:none;" data-default-text="No customers yet. Create your first user above.">
+            <p>No customers yet. Create your first user above.</p>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+
+
+    <div id="contactModal" class="contact-modal" aria-hidden="true">
+    <div class="contact-card" role="dialog" aria-modal="true" aria-labelledby="contactTitle">
+      <div class="contact-card-header">
+        <div>
+          <p class="contact-eyebrow">Admin Support</p>
+          <h2 id="contactTitle">Contact Admin</h2>
+        </div>
+        <button type="button" id="contactCloseBtn" class="contact-card-close" aria-label="Close">×</button>
+      </div>
+      <p class="contact-card-sub">Choose a platform below to contact admin directly.</p>
+      <a class="contact-row" href="https://www.tiktok.com/@fimpong_34" target="_blank" rel="noopener">
+        <span class="contact-row-icon"><img src="/image/contact-tiktok.webp" alt="TikTok" /></span>
+        <span><span class="contact-row-label">TikTok</span><span class="contact-row-handle">@fimpong_34</span></span>
+      </a>
+      <a class="contact-row" href="https://www.instagram.com/fimpong34" target="_blank" rel="noopener">
+        <span class="contact-row-icon"><img src="/image/contact-instagram.webp" alt="Instagram" /></span>
+        <span><span class="contact-row-label">Instagram</span><span class="contact-row-handle">@fimpong34</span></span>
+      </a>
+      <a class="contact-row" href="https://t.me/fimpong34" target="_blank" rel="noopener">
+        <span class="contact-row-icon"><img src="/image/contact-telegram.webp" alt="Telegram" /></span>
+        <span><span class="contact-row-label">Telegram</span><span class="contact-row-handle">@fimpong34</span></span>
+      </a>
+      <a class="contact-row" href="https://discord.com/users/fimpong34_48171" target="_blank" rel="noopener">
+        <span class="contact-row-icon"><img src="/image/contact-discord.webp" alt="Discord" /></span>
+        <span><span class="contact-row-label">Discord</span><span class="contact-row-handle">fimpong34_48171</span></span>
+      </a>
+    </div>
+  </div>
+
+  <script>
+
+
+    // Clean Contact Admin modal
+    const contactModal = document.getElementById('contactModal');
+    const contactMeBtn = document.getElementById('contactMeBtn');
+    const contactCloseBtn = document.getElementById('contactCloseBtn');
+    function showContactModal(){ if(contactModal){ contactModal.classList.add('show'); contactModal.setAttribute('aria-hidden','false'); } }
+    function hideContactModal(){ if(contactModal){ contactModal.classList.remove('show'); contactModal.setAttribute('aria-hidden','true'); } }
+    if (contactMeBtn) contactMeBtn.addEventListener('click', showContactModal);
+    if (contactCloseBtn) contactCloseBtn.addEventListener('click', hideContactModal);
+    if (contactModal) contactModal.addEventListener('click', (e) => { if (e.target === contactModal) hideContactModal(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') hideContactModal(); });
+
+    const hostBtn = document.getElementById('openHost');
+    const remoteBtn = document.getElementById('openRemote');
+    const portalLiveStatus = document.getElementById('portalLiveBridgeStatus');
+    const portalLiveNameInput = document.getElementById('liveStreamNameInput');
+    const portalLiveSessionIdInput = document.getElementById('liveSessionIdInput');
+    const portalStartLiveBtn = document.getElementById('portalStartLiveBridge');
+    const portalStopLiveBtn = document.getElementById('portalStopLiveBridge');
+
+    let portalLiveUsername = null;
+
+    function normalizeTikTokName(value) {
+      return String(value || '').trim().replace(/^@+/, '');
+    }
+
+    function getLiveStreamNameStorageKey(username) {
+      return `tiktok-live-stream-name:${String(username || 'default').toLowerCase()}`;
+    }
+
+    function getLiveSessionIdStorageKey(username) {
+      return `tiktok-live-session-id:${String(username || 'default').toLowerCase()}`;
+    }
+
+    function getStoredLiveStreamName(username) {
+      try {
+        return (localStorage.getItem(getLiveStreamNameStorageKey(username)) || '').trim();
+      } catch (err) {
+        return '';
+      }
+    }
+
+    function saveStoredLiveStreamName(username, value) {
+      try {
+        localStorage.setItem(getLiveStreamNameStorageKey(username), normalizeTikTokName(value));
+      } catch (err) {
+        // ignore
+      }
+    }
+
+    function getStoredLiveSessionId(username) {
+      try {
+        return (localStorage.getItem(getLiveSessionIdStorageKey(username)) || '').trim();
+      } catch (err) {
+        return '';
+      }
+    }
+
+    function saveStoredLiveSessionId(username, value) {
+      try {
+        localStorage.setItem(getLiveSessionIdStorageKey(username), String(value || '').trim());
+      } catch (err) {
+        // ignore
+      }
+    }
+
+    async function loadPortalLiveUserAndInputs() {
+      try {
+        const res = await fetch('/api/auth/status', { credentials: 'include' });
+        const body = await res.json();
+        if (!res.ok || !body?.authenticated) return null;
+        const username = String(body.user?.username || '').trim().toLowerCase();
+        portalLiveUsername = username || null;
+        const storedName = getStoredLiveStreamName(portalLiveUsername);
+        const storedSessionId = getStoredLiveSessionId(portalLiveUsername);
+        if (portalLiveNameInput && storedName) portalLiveNameInput.value = storedName;
+        if (portalLiveSessionIdInput && storedSessionId) portalLiveSessionIdInput.value = storedSessionId;
+        return portalLiveUsername;
+      } catch (err) {
+        return null;
+      }
+    }
+
+    async function refreshPortalLiveStatus() {
+      try {
+        // Only fetch user info if not already loaded — avoid hitting /api/auth/status on every poll
+        if (!portalLiveUsername) await loadPortalLiveUserAndInputs();
+        const res = await fetch('/api/tiktok-live/status', { credentials: 'include' });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body?.error || 'status failed');
+        const connectedLiveId = normalizeTikTokName(body?.liveUniqueId);
+        if (portalLiveStatus) {
+          portalLiveStatus.textContent = body.connected
+            ? `Connected @${connectedLiveId || ''}`
+            : (body.active ? 'Connecting...' : 'Disconnected');
+        }
+        if (body.connected && connectedLiveId) {
+          if (portalLiveNameInput) portalLiveNameInput.value = connectedLiveId;
+          saveStoredLiveStreamName(portalLiveUsername, connectedLiveId);
+        }
+      } catch (err) {
+        if (portalLiveStatus) portalLiveStatus.textContent = 'Status unavailable';
+      }
+    }
+
+    async function startPortalLiveBridge() {
+      const username = portalLiveUsername || await loadPortalLiveUserAndInputs();
+      const liveUniqueId = normalizeTikTokName(portalLiveNameInput?.value || getStoredLiveStreamName(username));
+      const sessionId = String(portalLiveSessionIdInput?.value || getStoredLiveSessionId(username) || '').trim();
+      if (!liveUniqueId) {
+        if (portalLiveStatus) portalLiveStatus.textContent = 'Enter TikTok host name first';
+        return;
+      }
+
+      saveStoredLiveStreamName(username, liveUniqueId);
+      saveStoredLiveSessionId(username, sessionId);
+      if (portalLiveNameInput) portalLiveNameInput.value = liveUniqueId;
+      if (portalLiveSessionIdInput) portalLiveSessionIdInput.value = sessionId;
+      if (portalLiveStatus) portalLiveStatus.textContent = 'Connecting...';
+
+      try {
+        const res = await fetch('/api/tiktok-live/start', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ liveUniqueId, sessionId }),
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body?.error || 'start failed');
+        const connectedLiveId = normalizeTikTokName(body?.liveUniqueId || liveUniqueId);
+        if (portalLiveNameInput) portalLiveNameInput.value = connectedLiveId;
+        saveStoredLiveStreamName(username, connectedLiveId);
+        if (portalLiveStatus) portalLiveStatus.textContent = `Connected @${connectedLiveId}`;
+      } catch (err) {
+        const rawMessage = String(err?.message || 'start failed');
+        const hint = /initial room data/i.test(rawMessage)
+          ? ' Add Session ID cookie value and confirm host is currently live.'
+          : '';
+        if (portalLiveStatus) portalLiveStatus.textContent = `Error: ${rawMessage}${hint}`;
+      }
+    }
+
+    async function stopPortalLiveBridge() {
+      if (portalLiveStatus) portalLiveStatus.textContent = 'Stopping...';
+      try {
+        const res = await fetch('/api/tiktok-live/stop', {
+          method: 'POST',
+          credentials: 'include',
+        });
+        const body = await res.json();
+        if (!res.ok) throw new Error(body?.error || 'stop failed');
+        if (portalLiveStatus) portalLiveStatus.textContent = 'Disconnected';
+      } catch (err) {
+        if (portalLiveStatus) portalLiveStatus.textContent = `Error: ${err?.message || 'stop failed'}`;
+      }
+    }
+
+    if (hostBtn) hostBtn.addEventListener('click', () => {
+      window.open('mode1.html?mode=host', '_blank');
+    });
+    if (remoteBtn) remoteBtn.addEventListener('click', () => {
+      window.open('mode2.html?mode=remote', '_blank');
+    });
+    const makeVideoBtn = document.getElementById('openMakeVideo');
+    if (makeVideoBtn) makeVideoBtn.addEventListener('click', () => {
+      window.open('makevideo.html', '_blank');
+    });
+
+    if (portalLiveStatus || portalLiveNameInput || portalLiveSessionIdInput || portalStartLiveBtn || portalStopLiveBtn) {
+      if (portalStartLiveBtn) {
+        portalStartLiveBtn.addEventListener('click', () => {
+          startPortalLiveBridge();
+        });
+      }
+
+      if (portalStopLiveBtn) {
+        portalStopLiveBtn.addEventListener('click', () => {
+          stopPortalLiveBridge();
+        });
+      }
+
+      if (portalLiveNameInput) {
+        portalLiveNameInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            startPortalLiveBridge();
+          }
+        });
+      }
+
+      if (portalLiveSessionIdInput) {
+        portalLiveSessionIdInput.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter') {
+            e.preventDefault();
+            startPortalLiveBridge();
+          }
+        });
+        portalLiveSessionIdInput.addEventListener('blur', () => {
+          saveStoredLiveSessionId(portalLiveUsername, portalLiveSessionIdInput.value || '');
+        });
+      }
+
+      refreshPortalLiveStatus();
+      setInterval(refreshPortalLiveStatus, 15000);
+    }
+
+    /* ---- Lion upgrade: listen for download progress from mode1 ---- */
+    const isIPhone = /iPhone|iPod/.test(navigator.userAgent);
+    const lionDlCh = typeof BroadcastChannel !== 'undefined' ? new BroadcastChannel('lion-upgrade-dl') : null;
+
+    function showLionDlProgress(pct) {
+      const bar   = document.getElementById('lionDlBar');
+      const label = document.getElementById('lionDlLabel');
+      const pctEl = document.getElementById('lionDlPct');
+      const fill  = document.getElementById('lionDlFill');
+      const done  = document.getElementById('lionDlDone');
+      if (!bar) return;
+      bar.classList.add('active');
+      if (pct >= 100) {
+        if (label) label.style.display = 'none';
+        if (done) done.style.display = 'block';
+        if (fill) fill.style.width = '100%';
+      } else {
+        if (label) label.style.display = '';
+        if (done) done.style.display = 'none';
+        if (pctEl) pctEl.textContent = pct;
+        if (fill) fill.style.width = pct + '%';
+      }
+    }
+
+    if (!isIPhone && lionDlCh) {
+      lionDlCh.onmessage = (e) => {
+        const msg = e.data;
+        if (msg && msg.type === 'lion-dl') {
+          if (msg.status === 'done') showLionDlProgress(100);
+          else if (msg.status === 'progress') showLionDlProgress(msg.pct || 0);
+          else if (msg.status === 'error') {
+            const bar = document.getElementById('lionDlBar');
+            if (bar) bar.classList.remove('active');
+          }
+        }
+      };
+      // Also check IndexedDB on load to show "ready" if already cached
+      (async () => {
+        try {
+          const req = indexedDB.open('lionUpgradeCache', 1);
+          req.onupgradeneeded = () => { req.result.createObjectStore('blobs'); };
+          req.onsuccess = () => {
+            const db = req.result;
+            const tx = db.transaction('blobs', 'readonly');
+            const r = tx.objectStore('blobs').get('lionupgrade_webm_v5');
+            r.onsuccess = () => { if (r.result) showLionDlProgress(100); };
+          };
+        } catch(e) {}
+      })();
+    }
+
+    // Inline SVG eye icons (no external font/CDN dependency, so they always
+    // render — including offline in the Electron app).
+    const EYE_OPEN_SVG = '<svg class="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7-11-7-11-7z"/><circle cx="12" cy="12" r="3"/></svg>';
+    const EYE_SLASH_SVG = '<svg class="eye-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+
+    document.querySelectorAll('.password-toggle').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const targetId = btn.getAttribute('data-target');
+        const input = document.getElementById(targetId);
+        if (!input) return;
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        // Match the icon size already in the button.
+        const size = btn.querySelector('svg')?.getAttribute('width') || '20';
+        btn.innerHTML = (isPassword ? EYE_SLASH_SVG : EYE_OPEN_SVG).replace(/width="20" height="20"/, `width="${size}" height="${size}"`);
+        btn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+      });
+    });
+  </script>
+  <!-- Electron-safe modal dialogs (prompt/alert/confirm replacements) -->
+  <style>
+    #_eModal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:99999;align-items:center;justify-content:center}
+    #_eModal.on{display:flex}
+    #_eBox{background:#161a21;border:1px solid #232836;border-radius:14px;padding:24px 28px;width:360px;max-width:90vw;display:flex;flex-direction:column;gap:14px;box-shadow:0 8px 32px rgba(0,0,0,.5)}
+    #_eMsg{font-size:14px;color:#e8ecf2;line-height:1.5;white-space:pre-wrap}
+    #_eInput{width:100%;padding:10px 12px;background:#0f1115;border:1px solid #232836;border-radius:8px;color:#e8ecf2;font-size:15px;font-family:inherit;outline:none}
+    #_eInput:focus{border-color:#5dd1ff}
+    #_eBtns{display:flex;gap:10px;justify-content:flex-end}
+    #_eBtns button{padding:8px 20px;border-radius:10px;border:1px solid #232836;background:transparent;color:#e8ecf2;cursor:pointer;font-size:14px;font-family:inherit}
+    #_eOk{background:#5dd1ff!important;color:#000!important;border-color:#5dd1ff!important;font-weight:700}
+    #_eDanger{background:#e53e3e!important;color:#fff!important;border-color:#e53e3e!important;font-weight:700}
+  </style>
+  <div id="_eModal">
+    <div id="_eBox">
+      <div id="_eMsg"></div>
+      <input id="_eInput" type="text" autocomplete="off" style="display:none" />
+      <div id="_eBtns">
+        <button id="_eCancel" style="display:none">Cancel</button>
+        <button id="_eOk">OK</button>
+      </div>
+    </div>
+  </div>
+  <script src="temp-auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "name": "dubai-king-guest-live-local",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Thak-Thuk Guest Dubai King Live controller",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "dotenv": "^17.2.2",
+    "mongodb": "^6.19.0"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
